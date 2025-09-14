@@ -1,0 +1,70 @@
+{% extends "myapp/layout.html" %}
+{% block title %}
+my issues
+{% endblock%}
+
+{% block main %}
+  
+<div class ="mb-3" >
+<div class="container mt-4">
+  <h2> My Issues </h2>
+  <table class="table table-bordered table-hover table-striped">
+    <thead class="thead-dark">
+      <tr>
+        <th>#</th>
+        <th>username</th>
+        <th>type</th>
+        <th>address</th>
+        <th>photo</th>
+        <th>date</th>
+        <th>status</th>
+        <th>mail</th>
+      </tr>
+    </thead>
+
+<tbody>
+
+  {% for issue in request.user.issues.all %}
+    <tr>
+        <th scope = "row" > {{forloop.counter}}</th>
+        
+        <td>
+        {{issue.user.username}}
+        </td>
+        <td>
+          {{issue.category}}
+        </td>
+        <td>
+          {{issue.address}}
+        </td>
+        <td>
+         
+ 
+           {% if issue.image %}
+                <a href="{{ issue.image.url }}" target="_blank">
+              <img src="{{ issue.image.url }}" alt="Issue Photo" width="50">
+            </a>
+            {% else %}
+                No image
+            {% endif %}
+        </td>
+        <td>
+          {{issue.created_at}}
+        </td>
+        <td>
+          {{issue.status}}
+        </td>
+        <td>
+        {{issue.mail}}
+        </td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+
+
+ </div>
+
+
+{% endblock%}

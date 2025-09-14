@@ -1,0 +1,94 @@
+{% extends "myapp/layout.html" %}
+{% block title %}
+ user dashboard
+{% endblock%}
+
+{% block main %}
+<h1> welcome, {{user.username}} </h1>
+
+
+
+<div class="mb-3">
+<form method="post" enctype="multipart/form-data" id = 'form'>
+    {% csrf_token %}
+    
+       <div class="mb-3">
+    <label for="title">title</label>
+    <input type="text" name="title" required><br><br>
+       </div>
+        <div class="mb-3">
+    <label for="category">category</label>
+    <input type="text" name="category" required><br><br>
+       </div>
+       <div class="mb-3">
+    <label for="description">description</label>
+    <input type="text" name="description" required><br><br>
+       </div>
+        <div class="mb-3">   
+    <label for="image">Upload Picture</label>
+    <input type="file" name="image" accept="image/*" required><br><br>
+        </div>
+         <div class="mb-3">
+    <input type="hidden" name="latitude"  id="latitude">
+    <input type="hidden" name="longitude"  id="longitude">
+         </div>
+        <div class="mb-3">
+    <label for="address">address</label>
+    <input type="text" name="address" required><br><br>
+       </div>   
+          <div class="mb-3">
+    <button type="submit" id = 'button' >Submit</button>
+          </div>
+  </form>
+</div>
+
+
+<script>
+// Get user's location from browser (works on phone too
+//high accuracy
+/*document.addEventListener('DOMContentLoaded', function() {  document.getElementById('button').addEventListener('click', getLocation) });
+function getLocation(event) {
+    
+    event.preventDefault();
+
+    if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      function success(position) {
+        // Assign coordinates to input fields
+        document.getElementById('latitude').value = position.coords.latitude;
+        document.getElementById('longitude').value = position.coords.longitude;
+
+        console.log("Latitude:", position.coords.latitude);
+        console.log("Longitude:", position.coords.longitude);
+        console.log("Accuracy (meters):", position.coords.accuracy);
+
+          // ✅ Now submit form after coordinates are set
+        document.getElementById('form').submit();
+
+      },
+      function error(err) {
+        console.warn(`ERROR(${err.code}): ${err.message}`);
+        alert("Unable to retrieve location. Please enable GPS.");
+      },
+      {
+        enableHighAccuracy: true, // Use GPS if available
+        timeout: 10000,           // Wait max 10 seconds
+        maximumAge: 0             // Don’t use cached location
+      }
+    );
+  } else {
+    alert("Geolocation is not supported by this browser.");
+  }
+} */
+
+
+// low accuracy
+if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(function(position) {
+        document.getElementById('latitude').value = position.coords.latitude;
+        document.getElementById('longitude').value = position.coords.longitude;
+    });
+}
+</script>
+
+{% endblock %}

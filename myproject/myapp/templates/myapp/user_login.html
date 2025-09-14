@@ -1,0 +1,37 @@
+{% extends "myapp/layout.html" %}
+
+{% block title %}
+    login
+{% endblock %}
+
+
+
+
+{% block main %}
+<form  method="POST" id="fruitForm">
+  
+
+</form>
+    <h2>User Login</h2>
+
+    <form method="post" action="">
+        {% csrf_token %}
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required><br><br>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required><br><br>
+
+        <button type="submit">Login</button>
+    </form>
+
+    {% if messages %}
+        <ul>
+            {% for message in messages %}
+                <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+
+{% endblock %}

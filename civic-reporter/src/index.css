@@ -1,0 +1,104 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+@layer base {
+  :root {
+    --background: 210 20% 96%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 98%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 98%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 199 89% 48%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 92%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --muted: 210 40% 92%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 92%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 85%;
+    --input: 214.3 31.8% 88%;
+    --ring: 199 89% 48%;
+    --radius: 12px;
+  }
+
+  .dark {
+    --background: 220 13% 7%;
+    --foreground: 220 10% 95%;
+    --card: 220 12% 8% / 0.8;
+    --card-foreground: 220 10% 95%;
+    --popover: 220 12% 8% / 0.95;
+    --popover-foreground: 220 10% 95%;
+    --primary: 199 89% 48%;
+    --primary-foreground: 220 10% 98%;
+    --secondary: 220 12% 12%;
+    --secondary-foreground: 220 10% 85%;
+    --muted: 220 12% 12%;
+    --muted-foreground: 220 10% 65%;
+    --accent: 199 89% 48% / 0.2;
+    --accent-foreground: 199 89% 48%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 220 10% 98%;
+    --border: 220 12% 15%;
+    --input: 220 12% 15% / 0.8;
+    --ring: 199 89% 48%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+
+  .glass {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: var(--glass-shadow);
+  }
+
+  .glass-dark {
+    background: hsla(var(--card));
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid hsla(var(--border));
+    box-shadow: var(--glass-shadow);
+  }
+
+  .glow-primary {
+    filter: drop-shadow(0 0 8px hsl(var(--glow-primary)));
+  }
+
+  .glow-secondary {
+    filter: drop-shadow(0 0 8px hsl(var(--glow-secondary)));
+  }
+
+  .transition-all-smooth {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  @keyframes pulse-glow {
+    0%, 100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+    50% {
+      transform: scale(1.1);
+      opacity: 0.8;
+    }
+  }
+
+  .pulse-glow {
+    animation: pulse-glow 2s ease-in-out infinite;
+  }
+}

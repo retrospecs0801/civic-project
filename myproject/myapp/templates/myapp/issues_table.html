@@ -1,0 +1,45 @@
+{% for issue in issues %}
+<tr>
+    <th scope="row">{{ forloop.counter }}</th>
+    <td>{{ issue.user.username }}</td>
+    <td>{{ issue.category }}</td>
+    <td>{{ issue.address }}</td>
+    <td>
+        {% if issue.image %}
+            <a href="{{ issue.image.url }}" target="_blank">
+                <img src="{{ issue.image.url }}" alt="Issue Photo" width="50">
+            </a>
+        {% else %}
+            No image
+        {% endif %}
+    </td>
+    <td>{{ issue.created_at }}</td>
+    <td>
+                        
+                             <form action="{% url 'admin_dashboard' %}" method="POST" id="form-{{ issue.id }}">
+                                {% csrf_token %}
+                                <input type="hidden" name="row_id" value="{{ issue.id }}">
+                                <select name="status" onchange="confirmAndSubmit({{ issue.id }})" id="select-{{ issue.id }}">
+                                    <option value="submitted" {% if issue.status == 'submitted' %}selected{% endif %}>submitted</option>
+                                    <option value="in_progress" {% if issue.status == 'in_progress' %}selected{% endif %}>in_progress</option>
+                                    <option value="fixed" {% if issue.status == 'fixed' %}selected{% endif %}>fixed</option>
+                                </select>
+                            </form>
+    
+    </td>
+    <td>{{ issue.mail }}</td>
+</tr>
+
+{% empty %}
+<tr><td colspan="7">No results found</td></tr>
+{% endfor %}
+
+<script>
+function confirmAndSubmit(issueId) {
+  let select = document.getElementById("select-" + issueId);
+  let status = select.value;
+  if (confirm("Are you sure you want to select: " + status + "?")) {
+    document.getElementById("form-" + issueId).submit();
+  }
+}
+</script>

@@ -1,0 +1,48 @@
+{% extends "myapp/layout.html" %}
+{% block title %}
+ admin dashboard
+{% endblock%}
+
+{% block main %}
+<h1> admin_dashboard </h1>
+
+<input type="text" id="searchBox" placeholder="Search by address">
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>User</th>
+      <th>Category</th>
+      <th>Address</th>
+      <th>Image</th>
+      <th>Created At</th>
+      <th>Status</th>
+      <th>Mail</th>
+    </tr>
+  </thead>
+  <tbody id="results">
+      {% include "myapp/issues_table.html" with issues=issues %}
+  </tbody>
+</table>
+
+
+<script>
+  document.getElementById("searchBox").addEventListener("input", function() {
+    let query = this.value;
+
+    fetch(`search/?q=${encodeURIComponent(query)}`)
+        .then(response => response.text()) // get HTML, not JSON
+        .then(html => {
+            document.getElementById("results").innerHTML = html;
+        })
+        .catch(err => console.error("Fetch failed:", err));
+});
+
+</script>
+
+
+
+
+    
+{% endblock %}
