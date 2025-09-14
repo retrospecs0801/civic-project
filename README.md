@@ -5,7 +5,6 @@ cd civic-project
 
 
 Backend setup:
-
 cd myproject |
 python -m venv venv |
 venv\Scripts\activate  |
