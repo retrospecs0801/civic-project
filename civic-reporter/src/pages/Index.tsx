@@ -81,7 +81,7 @@ const Index = ({ onLogout }: IndexProps) => {
                 <MapPin className="h-4 w-4 sm:h-6 sm:w-6 text-primary-foreground" />
               </div>
               <div>
-                <h1 className="text-lg sm:text-xl font-bold text-foreground">C</h1>
+                <h1 className="text-lg sm:text-xl font-bold text-foreground">Civic Reporter</h1>
                 <p className="text-xs sm:text-sm text-muted-foreground hidden sm:block">
                   Report & track community issues
                 </p>
