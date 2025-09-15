@@ -28,7 +28,7 @@ const Index = ({ onLogout }: IndexProps) => {
   const [focusedIssue, setFocusedIssue] = useState<Issue | null>(null);
   const { toast } = useToast();
   const { theme, toggleTheme } = useTheme();
-  const [mapKey, setMapKey] = useState(0);
+  const [mapKey, setMapKey] = useState(0); // Added for marker persistence fix
 
   // Fetch issues from backend on mount
   useEffect(() => {
