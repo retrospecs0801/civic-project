@@ -76,16 +76,23 @@ export const Map: React.FC<MapProps> = ({ issues, userLocation, focusedIssue, cl
         map.current.removeLayer(userMarkerRef.current);
       }
 
-      userMarkerRef.current = L.marker([userLocation.lat, userLocation.lng])
+      // Create custom blue icon for current location
+      const currentLocationIcon = L.divIcon({
+        html: '<div style="background-color: #3b82f6; width: 20px; height: 20px; border-radius: 50%; border: 3px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3);"></div>',
+        className: 'custom-div-icon',
+        iconSize: [20, 20],
+        iconAnchor: [10, 10]
+      });
+
+      userMarkerRef.current = L.marker([userLocation.lat, userLocation.lng], { icon: currentLocationIcon })
         .addTo(map.current)
-        .bindPopup(`📍 ${t('yourLocation')}`)
-        .openPopup();
+        .bindPopup(`📍 ${t('yourLocation')} (Current Location)`);
 
       map.current.setView([userLocation.lat, userLocation.lng], 15);
     }).catch(error => {
       console.error('Failed to add user marker:', error);
     });
-  }, [userLocation]);
+  }, [userLocation, t]);
 
   useEffect(() => {
     if (!map.current) return;
@@ -116,7 +123,24 @@ export const Map: React.FC<MapProps> = ({ issues, userLocation, focusedIssue, cl
         `;
 
         try {
-          const marker = L.marker([issue.coordinates.lat, issue.coordinates.lng])
+          // Create custom colored icon based on status
+          const getStatusColor = (status: string) => {
+            switch (status) {
+              case 'submitted': return '#eab308'; // yellow
+              case 'in_progress': return '#3b82f6'; // blue
+              case 'completed': return '#22c55e'; // green
+              default: return '#ef4444'; // red
+            }
+          };
+
+          const issueIcon = L.divIcon({
+            html: `<div style="background-color: ${getStatusColor(issue.status)}; width: 16px; height: 16px; border-radius: 50%; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3);"></div>`,
+            className: 'custom-div-icon',
+            iconSize: [16, 16],
+            iconAnchor: [8, 8]
+          });
+
+          const marker = L.marker([issue.coordinates.lat, issue.coordinates.lng], { icon: issueIcon })
             .addTo(map.current)
             .bindPopup(popupContent, { maxWidth: 300 });
 
@@ -128,7 +152,7 @@ export const Map: React.FC<MapProps> = ({ issues, userLocation, focusedIssue, cl
     }).catch(error => {
       console.error('Failed to load Leaflet for markers:', error);
     });
-  }, [issues]);
+  }, [issues, t]);
 
   useEffect(() => {
     if (!map.current || !focusedIssue) return;
