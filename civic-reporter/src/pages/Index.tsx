@@ -7,7 +7,7 @@ import { IssuesList } from '@/components/IssuesList';
 import { Map } from '@/components/Map';
 import { useGeolocation } from '@/hooks/useGeolocation';
 import { IssuesAPI } from '@/api/issues';
-import { Issue } from '@/types';
+import { Issue, IssueInput } from '@/types';
 import { 
   MapPin, Plus, List, Map as MapIcon, 
   AlertCircle, Loader2, RefreshCw, 
@@ -28,8 +28,9 @@ const Index = ({ onLogout }: IndexProps) => {
   const [focusedIssue, setFocusedIssue] = useState<Issue | null>(null);
   const { toast } = useToast();
   const { theme, toggleTheme } = useTheme();
+  const [mapKey, setMapKey] = useState(0); // Added for marker persistence fix
 
-  // Fetch issues on mount
+  // Fetch issues from backend on mount
   useEffect(() => {
     IssuesAPI.getAll()
       .then(data => setIssues(data))
@@ -38,15 +39,28 @@ const Index = ({ onLogout }: IndexProps) => {
   }, []);
 
   const handleSubmitIssue = (issue: Issue) => {
-    // Create via API
-    IssuesAPI.create(issue as any) // adjust type if your IssueForm sends FormData
+    const issueInput = {
+      title: issue.title,
+      description: issue.description,
+      category: issue.category,
+      status: issue.status,
+      coordinates: {
+        lat: Number(issue.coordinates.lat.toFixed(6)),
+        lng: Number(issue.coordinates.lng.toFixed(6))
+      },
+      photo: issue.photo,
+      address: issue.address
+    };
+
+    IssuesAPI.create(issueInput)
       .then(newIssue => {
         setIssues(prev => [...prev, newIssue]);
         setActiveTab('map');
         setFocusedIssue(newIssue);
       })
-      .catch(() => {
-        toast({ title: "Error", description: "Failed to submit issue." });
+      .catch((error) => {
+        console.error('API Error:', error);
+        toast({ title: "Error", description: "Failed to submit issue. Make sure backend is running." });
       });
   };
 
@@ -57,7 +71,7 @@ const Index = ({ onLogout }: IndexProps) => {
         toast({ title: "Issue Deleted", description: "The issue has been removed." });
       })
       .catch(() => {
-        toast({ title: "Error", description: "Failed to delete issue." });
+        toast({ title: "Error", description: "Failed to delete issue. Make sure backend is running." });
       });
   };
 
@@ -137,27 +151,27 @@ const Index = ({ onLogout }: IndexProps) => {
             </TabsTrigger>
           </TabsList>
 
-          {/* Map View */}
-          <TabsContent value="map" className="space-y-0">
+          {/* Always render map but show/hide based on active tab */}
+          <div className={`${activeTab === 'map' ? 'block' : 'hidden'}`}>
             <div className="flex flex-col lg:grid lg:grid-cols-4 gap-4 lg:gap-6 h-[calc(100vh-180px)] sm:h-[calc(100vh-200px)]">
               <div className="lg:col-span-3 h-64 sm:h-80 lg:h-full">
-                <Map issues={issues} userLocation={location} focusedIssue={focusedIssue} className="h-full" />
+                <Map key={mapKey} issues={issues} userLocation={location} focusedIssue={focusedIssue} className="h-full" />
               </div>
               <div className="lg:col-span-1 flex-1 lg:h-full">
                 <IssuesList issues={issues} onDeleteIssue={handleDeleteIssue} onFocusIssue={handleFocusIssue} />
               </div>
             </div>
-          </TabsContent>
+          </div>
 
           {/* Report Issue */}
-          <TabsContent value="report">
+          <div className={`${activeTab === 'report' ? 'block' : 'hidden'}`}>
             <IssueForm onSubmit={handleSubmitIssue} userLocation={location} />
-          </TabsContent>
+          </div>
 
           {/* Issues List */}
-          <TabsContent value="issues">
+          <div className={`${activeTab === 'issues' ? 'block' : 'hidden'}`}>
             <IssuesList issues={issues} onDeleteIssue={handleDeleteIssue} onFocusIssue={handleFocusIssue} />
-          </TabsContent>
+          </div>
         </Tabs>
       </main>
     </div>
